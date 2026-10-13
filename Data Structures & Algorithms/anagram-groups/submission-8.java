@@ -1,0 +1,41 @@
+public class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> outputList = new ArrayList<>();
+
+        if (strs.length == 1) {
+            outputList.add(List.of(strs[0]));
+            return outputList;
+        }
+
+        int strsLength = strs.length;
+        String[] strsSorted = strs.clone();
+        int[] marker = new int[strsLength];
+
+        for (int i = 0; i < strsLength; i++) {
+            char[] chars = strs[i].toCharArray();
+            Arrays.sort(chars);
+            strsSorted[i] = new String(chars);
+        }
+
+        HashMap<Integer, List<String>> lists = new HashMap<>();
+
+        for (int i = 0; i < strsLength; i++) {
+            if (marker[i] == 0) {
+                marker[i] = i + 1;
+                if (!lists.containsKey(marker[i])) {
+                    lists.put(marker[i], new ArrayList<>());
+                    lists.get(marker[i]).add(strs[i]);
+                }
+            }
+            for (int j = i + 1; j < strsLength; j++) {
+                if (i != j && marker[j] == 0 && strsSorted[i].equals(strsSorted[j])) {
+                    marker[j] = i + 1;
+                    lists.get(marker[i]).add(strs[j]);
+                }
+            }            
+        }        
+        outputList.addAll(lists.values());
+        
+        return outputList;
+    }
+}
